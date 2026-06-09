@@ -1,68 +1,226 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的網站</title>
+import React, { useMemo, useState } from "react";
+import {
+  Search,
+  Briefcase,
+  GraduationCap,
+  PlayCircle,
+  Globe,
+  Mail,
+  Calendar,
+  FileText,
+  MessageSquare,
+  PenTool,
+  Music,
+  Video,
+  ShoppingBag,
+  Github,
+  Bot,
+  FolderOpen,
+  Image as ImageIcon,
+  Sparkles,
+  Sun,
+  Moon,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            text-align: center;
-        }
+export default function ModernHomePage() {
+  const [query, setQuery] = useState("");
+  const [darkMode, setDarkMode] = useState(true);
 
-        .container {
-            padding: 80px 20px;
-        }
+  const categories = [
+    {
+      key: "work",
+      label: "工作",
+      icon: Briefcase,
+      color: "from-blue-500 to-cyan-400",
+      links: [
+        { name: "Gmail", url: "https://mail.google.com", icon: Mail, desc: "收發信件" },
+        { name: "Google 日曆", url: "https://calendar.google.com", icon: Calendar, desc: "行程安排" },
+        { name: "Google Drive", url: "https://drive.google.com", icon: FolderOpen, desc: "檔案管理" },
+        { name: "Notion", url: "https://www.notion.so", icon: FileText, desc: "筆記與專案" },
+        { name: "Canva", url: "https://www.canva.com", icon: PenTool, desc: "設計素材" },
+      ],
+    },
+    {
+      key: "study",
+      label: "學習",
+      icon: GraduationCap,
+      color: "from-violet-500 to-fuchsia-400",
+      links: [
+        { name: "ChatGPT", url: "https://chat.openai.com", icon: Bot, desc: "AI 助手" },
+        { name: "GitHub", url: "https://github.com", icon: Github, desc: "程式碼平台" },
+        { name: "Stack Overflow", url: "https://stackoverflow.com", icon: MessageSquare, desc: "技術問答" },
+        { name: "Medium", url: "https://medium.com", icon: Globe, desc: "文章閱讀" },
+      ],
+    },
+    {
+      key: "entertainment",
+      label: "娛樂",
+      icon: PlayCircle,
+      color: "from-rose-500 to-orange-400",
+      links: [
+        { name: "YouTube", url: "https://www.youtube.com", icon: Video, desc: "影音內容" },
+        { name: "Spotify", url: "https://open.spotify.com", icon: Music, desc: "音樂播放" },
+        { name: "Netflix", url: "https://www.netflix.com", icon: PlayCircle, desc: "影集電影" },
+        { name: "Pinterest", url: "https://www.pinterest.com", icon: ImageIcon, desc: "靈感收藏" },
+      ],
+    },
+    {
+      key: "daily",
+      label: "日常",
+      icon: Sparkles,
+      color: "from-emerald-500 to-teal-400",
+      links: [
+        { name: "Google", url: "https://www.google.com", icon: Search, desc: "快速搜尋" },
+        { name: "Google 地圖", url: "https://maps.google.com", icon: Globe, desc: "導航與地點" },
+        { name: "蝦皮", url: "https://shopee.tw", icon: ShoppingBag, desc: "購物平台" },
+        { name: "Facebook", url: "https://www.facebook.com", icon: MessageSquare, desc: "社群聯繫" },
+        { name: "Nonogram", url: "https://laplace0826.github.io/nonogram", icon: Globe, desc: "Nonogram" },
+      ],
+    },
+  ];
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
+  const filteredCategories = useMemo(() => {
+    if (!query.trim()) return categories;
+    const q = query.toLowerCase();
 
-        p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
+    return categories
+      .map((category) => ({
+        ...category,
+        links: category.links.filter(
+          (link) =>
+            link.name.toLowerCase().includes(q) ||
+            link.desc.toLowerCase().includes(q) ||
+            category.label.toLowerCase().includes(q)
+        ),
+      }))
+      .filter((category) => category.links.length > 0);
+  }, [query]);
 
-        .btn {
-            margin-top: 20px;
-            padding: 12px 25px;
-            background: white;
-            color: #333;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            display: inline-block;
-        }
+  const shellClass = darkMode
+    ? "min-h-screen bg-slate-950 text-white"
+    : "min-h-screen bg-slate-50 text-slate-900";
 
-        .btn:hover {
-            background: #ddd;
-        }
+  const panelClass = darkMode
+    ? "bg-white/8 border-white/10"
+    : "bg-white/80 border-slate-200/80";
 
-        footer {
-            margin-top: 60px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-    </style>
-</head>
+  const textSubClass = darkMode ? "text-slate-300" : "text-slate-600";
+  const textMutedClass = darkMode ? "text-slate-400" : "text-slate-500";
+  const inputClass = darkMode
+    ? "bg-white/10 border-white/10 text-white placeholder:text-slate-400"
+    : "bg-white border-slate-200 text-slate-900 placeholder:text-slate-400";
 
-<body>
-    <div class="container">
-        <h1>👋 你好，我是你的名字</h1>
-        <p>這是我的 GitHub 網站</p>
+  return (
+    <div className={shellClass}>
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.35),transparent_25%),radial-gradient(circle_at_top_right,rgba(244,114,182,0.25),transparent_25%),radial-gradient(circle_at_bottom,rgba(16,185,129,0.22),transparent_30%)]" />
+        <div className="relative mx-auto max-w-7xl px-6 py-10 md:px-10 lg:px-12">
+          <motion.header
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+            className={`rounded-[28px] border p-6 md:p-8 backdrop-blur-xl shadow-2xl ${panelClass}`}
+          >
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-3">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-sm">
+                  <Sparkles className="h-4 w-4 text-yellow-300" />
+                  我的快速入口首頁
+                </div>
+                <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
+                  讓常用網站更好看、
+                  <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
+                    更快打開
+                  </span>
+                </h1>
+                <p className={`max-w-2xl text-base md:text-lg ${textSubClass}`}>
+                  以分類卡片 + icon 按鈕呈現，搭配玻璃擬態與漸層背景，做出現代、有設計感的首頁。
+                </p>
+              </div>
 
-        <a class="btn" href="https://github.com/你的帳號" target="_blank">
-            查看我的 GitHub
-        </a>
+              <div className="flex w-full max-w-xl flex-col gap-3 lg:items-end">
+                <div className="flex w-full items-center gap-3">
+                  <div className={`flex flex-1 items-center gap-3 rounded-2xl border px-4 py-3 ${inputClass}`}>
+                    <Search className="h-5 w-5 opacity-80" />
+                    <input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="搜尋網站名稱或分類..."
+                      className="w-full bg-transparent outline-none"
+                    />
+                  </div>
 
-        <footer>
-            © 2026 我的網站
-        </footer>
+                  <button
+                    onClick={() => setDarkMode((v) => !v)}
+                    className={`rounded-2xl border p-3 transition hover:scale-[1.03] ${panelClass}`}
+                    aria-label="切換深色模式"
+                  >
+                    {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  </button>
+                </div>
+                <div className={`text-sm ${textMutedClass}`}>
+                    
+                  小提示：把下方連結替換成你自己的常用網站，就能直接當首頁使用。
+                </div>
+              </div>
+            </div>
+          </motion.header>
+
+          <main className="mt-8 grid gap-6 md:mt-10 md:grid-cols-2 xl:grid-cols-4">
+            {filteredCategories.map((category, index) => {
+              const CategoryIcon = category.icon;
+              return (
+                <motion.section
+                  key={category.key}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: index * 0.08 }}
+                  className={`group rounded-[28px] border p-5 shadow-xl backdrop-blur-xl ${panelClass}`}
+                >
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${category.color} shadow-lg`}>
+                      <CategoryIcon className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold">{category.label}</h2>
+                      <p className={`text-sm ${textMutedClass}`}>{category.links.length} 個常用網站</p>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-3">
+                    {category.links.map((link) => {
+                      const LinkIcon = link.icon;
+                      return (
+                        <a
+                          key={link.name}
+                          href={link.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={`group/item flex items-center gap-3 rounded-2xl border p-4 transition duration-200 hover:-translate-y-1 hover:shadow-2xl ${darkMode ? "border-white/10 bg-white/6 hover:bg-white/10" : "border-slate-200 bg-white/70 hover:bg-white"}`}
+                        >
+                          <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${category.color}`}>
+                            <LinkIcon className="h-5 w-5 text-white" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate font-medium">{link.name}</div>
+                            <div className={`truncate text-sm ${textMutedClass}`}>{link.desc}</div>
+                          </div>
+                          <Globe className={`h-4 w-4 transition group-hover/item:translate-x-1 ${textMutedClass}`} />
+                        </a>
+                      );
+                    })}
+                  </div>
+                </motion.section>
+              );
+            })}
+          </main>
+
+          <footer className={`mt-8 text-center text-sm ${textMutedClass}`}>
+            你可以直接修改 categories 陣列中的 name / url / desc，就能快速自訂首頁內容。
+          </footer>
+        </div>
+      </div>
     </div>
-</body>
-</html>
+  );
+}
