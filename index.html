@@ -1,226 +1,678 @@
-import React, { useMemo, useState } from "react";
-import {
-  Search,
-  Briefcase,
-  GraduationCap,
-  PlayCircle,
-  Globe,
-  Mail,
-  Calendar,
-  FileText,
-  MessageSquare,
-  PenTool,
-  Music,
-  Video,
-  ShoppingBag,
-  Github,
-  Bot,
-  FolderOpen,
-  Image as ImageIcon,
-  Sparkles,
-  Sun,
-  Moon,
-} from "lucide-react";
-import { motion } from "framer-motion";
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="現代感常用網站首頁，適合直接部署到 GitHub Pages。" />
+  <title>我的快速入口首頁</title>
 
-export default function ModernHomePage() {
-  const [query, setQuery] = useState("");
-  const [darkMode, setDarkMode] = useState(true);
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  const categories = [
-    {
-      key: "work",
-      label: "工作",
-      icon: Briefcase,
-      color: "from-blue-500 to-cyan-400",
-      links: [
-        { name: "Gmail", url: "https://mail.google.com", icon: Mail, desc: "收發信件" },
-        { name: "Google 日曆", url: "https://calendar.google.com", icon: Calendar, desc: "行程安排" },
-        { name: "Google Drive", url: "https://drive.google.com", icon: FolderOpen, desc: "檔案管理" },
-        { name: "Notion", url: "https://www.notion.so", icon: FileText, desc: "筆記與專案" },
-        { name: "Canva", url: "https://www.canva.com", icon: PenTool, desc: "設計素材" },
-      ],
-    },
-    {
-      key: "study",
-      label: "學習",
-      icon: GraduationCap,
-      color: "from-violet-500 to-fuchsia-400",
-      links: [
-        { name: "ChatGPT", url: "https://chat.openai.com", icon: Bot, desc: "AI 助手" },
-        { name: "GitHub", url: "https://github.com", icon: Github, desc: "程式碼平台" },
-        { name: "Stack Overflow", url: "https://stackoverflow.com", icon: MessageSquare, desc: "技術問答" },
-        { name: "Medium", url: "https://medium.com", icon: Globe, desc: "文章閱讀" },
-      ],
-    },
-    {
-      key: "entertainment",
-      label: "娛樂",
-      icon: PlayCircle,
-      color: "from-rose-500 to-orange-400",
-      links: [
-        { name: "YouTube", url: "https://www.youtube.com", icon: Video, desc: "影音內容" },
-        { name: "Spotify", url: "https://open.spotify.com", icon: Music, desc: "音樂播放" },
-        { name: "Netflix", url: "https://www.netflix.com", icon: PlayCircle, desc: "影集電影" },
-        { name: "Pinterest", url: "https://www.pinterest.com", icon: ImageIcon, desc: "靈感收藏" },
-      ],
-    },
-    {
-      key: "daily",
-      label: "日常",
-      icon: Sparkles,
-      color: "from-emerald-500 to-teal-400",
-      links: [
-        { name: "Google", url: "https://www.google.com", icon: Search, desc: "快速搜尋" },
-        { name: "Google 地圖", url: "https://maps.google.com", icon: Globe, desc: "導航與地點" },
-        { name: "蝦皮", url: "https://shopee.tw", icon: ShoppingBag, desc: "購物平台" },
-        { name: "Facebook", url: "https://www.facebook.com", icon: MessageSquare, desc: "社群聯繫" },
-        { name: "Nonogram", url: "https://laplace0826.github.io/nonogram", icon: Globe, desc: "Nonogram" },
-      ],
-    },
-  ];
+  <!-- Font Awesome Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkR4j8fU6JzDg7R2E0C0pDnH5L2K7arE8WmA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 
-  const filteredCategories = useMemo(() => {
-    if (!query.trim()) return categories;
-    const q = query.toLowerCase();
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: rgba(255, 255, 255, 0.08);
+      --bg-soft-hover: rgba(255, 255, 255, 0.12);
+      --panel: rgba(15, 23, 42, 0.56);
+      --panel-border: rgba(255, 255, 255, 0.10);
+      --text: #e5eefb;
+      --muted: #94a3b8;
+      --accent-a: #38bdf8;
+      --accent-b: #8b5cf6;
+      --shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+    }
 
-    return categories
-      .map((category) => ({
-        ...category,
-        links: category.links.filter(
-          (link) =>
-            link.name.toLowerCase().includes(q) ||
-            link.desc.toLowerCase().includes(q) ||
-            category.label.toLowerCase().includes(q)
-        ),
-      }))
-      .filter((category) => category.links.length > 0);
-  }, [query]);
+    body.light {
+      --bg: #f8fafc;
+      --bg-soft: rgba(255, 255, 255, 0.84);
+      --bg-soft-hover: rgba(255, 255, 255, 1);
+      --panel: rgba(255, 255, 255, 0.75);
+      --panel-border: rgba(148, 163, 184, 0.18);
+      --text: #0f172a;
+      --muted: #475569;
+      --shadow: 0 12px 34px rgba(15, 23, 42, 0.10);
+    }
 
-  const shellClass = darkMode
-    ? "min-h-screen bg-slate-950 text-white"
-    : "min-h-screen bg-slate-50 text-slate-900";
+    * {
+      box-sizing: border-box;
+    }
 
-  const panelClass = darkMode
-    ? "bg-white/8 border-white/10"
-    : "bg-white/80 border-slate-200/80";
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
 
-  const textSubClass = darkMode ? "text-slate-300" : "text-slate-600";
-  const textMutedClass = darkMode ? "text-slate-400" : "text-slate-500";
-  const inputClass = darkMode
-    ? "bg-white/10 border-white/10 text-white placeholder:text-slate-400"
-    : "bg-white border-slate-200 text-slate-900 placeholder:text-slate-400";
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.24), transparent 24%),
+        radial-gradient(circle at top right, rgba(236, 72, 153, 0.18), transparent 22%),
+        radial-gradient(circle at bottom center, rgba(16, 185, 129, 0.18), transparent 28%);
+      z-index: 0;
+    }
 
-  return (
-    <div className={shellClass}>
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.35),transparent_25%),radial-gradient(circle_at_top_right,rgba(244,114,182,0.25),transparent_25%),radial-gradient(circle_at_bottom,rgba(16,185,129,0.22),transparent_30%)]" />
-        <div className="relative mx-auto max-w-7xl px-6 py-10 md:px-10 lg:px-12">
-          <motion.header
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            className={`rounded-[28px] border p-6 md:p-8 backdrop-blur-xl shadow-2xl ${panelClass}`}
-          >
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-sm">
-                  <Sparkles className="h-4 w-4 text-yellow-300" />
-                  我的快速入口首頁
-                </div>
-                <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
-                  讓常用網站更好看、
-                  <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 bg-clip-text text-transparent">
-                    更快打開
-                  </span>
-                </h1>
-                <p className={`max-w-2xl text-base md:text-lg ${textSubClass}`}>
-                  以分類卡片 + icon 按鈕呈現，搭配玻璃擬態與漸層背景，做出現代、有設計感的首頁。
-                </p>
-              </div>
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px 20px 44px;
+    }
 
-              <div className="flex w-full max-w-xl flex-col gap-3 lg:items-end">
-                <div className="flex w-full items-center gap-3">
-                  <div className={`flex flex-1 items-center gap-3 rounded-2xl border px-4 py-3 ${inputClass}`}>
-                    <Search className="h-5 w-5 opacity-80" />
-                    <input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="搜尋網站名稱或分類..."
-                      className="w-full bg-transparent outline-none"
-                    />
-                  </div>
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 28px;
+      padding: 30px;
+      border-radius: var(--radius-xl);
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
 
-                  <button
-                    onClick={() => setDarkMode((v) => !v)}
-                    className={`rounded-2xl border p-3 transition hover:scale-[1.03] ${panelClass}`}
-                    aria-label="切換深色模式"
-                  >
-                    {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                  </button>
-                </div>
-                <div className={`text-sm ${textMutedClass}`}>
-                    
-                  小提示：把下方連結替換成你自己的常用網站，就能直接當首頁使用。
-                </div>
-              </div>
-            </div>
-          </motion.header>
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -120px -120px auto;
+      width: 280px;
+      height: 280px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.24), rgba(139, 92, 246, 0.18));
+      filter: blur(24px);
+      border-radius: 999px;
+      pointer-events: none;
+    }
 
-          <main className="mt-8 grid gap-6 md:mt-10 md:grid-cols-2 xl:grid-cols-4">
-            {filteredCategories.map((category, index) => {
-              const CategoryIcon = category.icon;
-              return (
-                <motion.section
-                  key={category.key}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: index * 0.08 }}
-                  className={`group rounded-[28px] border p-5 shadow-xl backdrop-blur-xl ${panelClass}`}
-                >
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${category.color} shadow-lg`}>
-                      <CategoryIcon className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-semibold">{category.label}</h2>
-                      <p className={`text-sm ${textMutedClass}`}>{category.links.length} 個常用網站</p>
-                    </div>
-                  </div>
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
 
-                  <div className="grid gap-3">
-                    {category.links.map((link) => {
-                      const LinkIcon = link.icon;
-                      return (
-                        <a
-                          key={link.name}
-                          href={link.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={`group/item flex items-center gap-3 rounded-2xl border p-4 transition duration-200 hover:-translate-y-1 hover:shadow-2xl ${darkMode ? "border-white/10 bg-white/6 hover:bg-white/10" : "border-slate-200 bg-white/70 hover:bg-white"}`}
-                        >
-                          <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${category.color}`}>
-                            <LinkIcon className="h-5 w-5 text-white" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="truncate font-medium">{link.name}</div>
-                            <div className={`truncate text-sm ${textMutedClass}`}>{link.desc}</div>
-                          </div>
-                          <Globe className={`h-4 w-4 transition group-hover/item:translate-x-1 ${textMutedClass}`} />
-                        </a>
-                      );
-                    })}
-                  </div>
-                </motion.section>
-              );
-            })}
-          </main>
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+    }
 
-          <footer className={`mt-8 text-center text-sm ${textMutedClass}`}>
-            你可以直接修改 categories 陣列中的 name / url / desc，就能快速自訂首頁內容。
-          </footer>
+    .hero h1 .gradient {
+      background: linear-gradient(90deg, #67e8f9 0%, #60a5fa 45%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .hero-tools {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .search-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .search-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      height: 58px;
+      border-radius: 20px;
+      background: var(--bg-soft);
+      border: 1px solid var(--panel-border);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .search-box input::placeholder {
+      color: var(--muted);
+    }
+
+    .theme-btn {
+      width: 58px;
+      min-width: 58px;
+      height: 58px;
+      border: 1px solid var(--panel-border);
+      background: var(--bg-soft);
+      color: var(--text);
+      border-radius: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .theme-btn:hover {
+      transform: translateY(-2px);
+      background: var(--bg-soft-hover);
+    }
+
+    .hint {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .category {
+      padding: 22px;
+      border-radius: var(--radius-xl);
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .category:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22);
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .category-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 21px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+    }
+
+    .cat-work { background: linear-gradient(135deg, #3b82f6, #22d3ee); }
+    .cat-study { background: linear-gradient(135deg, #8b5cf6, #d946ef); }
+    .cat-entertainment { background: linear-gradient(135deg, #f43f5e, #fb923c); }
+    .cat-daily { background: linear-gradient(135deg, #10b981, #14b8a6); }
+
+    .category-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .category-subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .links {
+      display: grid;
+      gap: 12px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+      padding: 14px;
+      border-radius: 20px;
+      background: var(--bg-soft);
+      border: 1px solid var(--panel-border);
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .link-card:hover {
+      transform: translateY(-3px);
+      background: var(--bg-soft-hover);
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+    }
+
+    .link-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .link-body {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .link-title {
+      font-weight: 600;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .link-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .arrow {
+      color: var(--muted);
+      font-size: 14px;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .link-card:hover .arrow {
+      transform: translateX(4px);
+      color: var(--text);
+    }
+
+    .empty {
+      display: none;
+      margin-top: 26px;
+      padding: 26px;
+      border-radius: var(--radius-xl);
+      text-align: center;
+      font-size: 15px;
+      color: var(--muted);
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      box-shadow: var(--shadow);
+    }
+
+    .footer {
+      margin-top: 26px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .footer code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px 8px;
+      border-radius: 8px;
+      color: var(--text);
+    }
+
+    @media (max-width: 1200px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 18px 14px 30px;
+      }
+
+      .hero {
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .search-row {
+        flex-direction: row;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .category {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div>
+        <div class="badge">
+          <i class="fa-solid fa-sparkles"></i>
+          我的快速入口首頁
+        </div>
+        <h1>
+          讓常用網站更好看、
+          <span class="gradient">更快打開</span>
+        </h1>
+        <p>
+          這是一個適合直接部署到 GitHub Pages 的純 HTML 首頁。使用分類卡片、icon 圖示、玻璃擬態與漸層視覺，打造現代、有設計感的快捷入口頁面。
+        </p>
+      </div>
+
+      <div class="hero-tools">
+        <div class="search-row">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="searchInput" type="text" placeholder="搜尋網站名稱或分類..." />
+          </div>
+          <button id="themeToggle" class="theme-btn" aria-label="切換深色模式">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+        </div>
+        <div class="hint">
+          小提示：你可以直接修改每個 <code>&lt;a&gt;</code> 連結的名稱、網址與說明，然後把這個檔案命名為 <code>index.html</code>，上傳到 GitHub Pages 就能直接使用。
         </div>
       </div>
+    </section>
+
+    <main id="categoryGrid" class="grid">
+      <section class="category" data-category="工作">
+        <div class="category-header">
+          <div class="category-icon cat-work"><i class="fa-solid fa-briefcase"></i></div>
+          <div>
+            <h2 class="category-title">工作</h2>
+            <div class="category-subtitle">5 個常用網站</div>
+          </div>
+        </div>
+        <div class="links">
+          https://mail.google.com
+          <a class="link-card" data-search="工作 google 日曆 行程安排" href="https://calendar.google.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-work"><i class="fa-solid fa-calendar-days"></i></div>
+            <div class="link-body">
+              <div class="link-title">Google 日曆</div>
+              <div class="link-desc">行程安排</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="工作 google drive 檔案管理" href="https://drive.google.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-work"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="link-body">
+              <div class="link-title">Google Drive</div>
+              <div class="link-desc">檔案管理</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="工作 notion 筆記 專案" href="https://www.notion.so" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-work"><i class="fa-solid fa-note-sticky"></i></div>
+            <div class="link-body">
+              <div class="link-title">Notion</div>
+              <div class="link-desc">筆記與專案</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="工作 canva 設計素材" href="https://www.canva.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-work"><i class="fa-solid fa-pen-ruler"></i></div>
+            <div class="link-body">
+              <div class="link-title">Canva</div>
+              <div class="link-desc">設計素材</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+        </div>
+      </section>
+
+      <section class="category" data-category="學習">
+        <div class="category-header">
+          <div class="category-icon cat-study"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div>
+            <h2 class="category-title">學習</h2>
+            <div class="category-subtitle">4 個常用網站</div>
+          </div>
+        </div>
+        <div class="links">
+          <a class="link-card" data-search="學習 chatgpt ai 助手" href="https://chat.openai.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-study"><i class="fa-solid fa-robot"></i></div>
+            <div class="link-body">
+              <div class="link-title">ChatGPT</div>
+              <div class="link-desc">AI 助手</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="學習 github 程式碼平台" href="https://github.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-study"><i class="fa-brands fa-github"></i></div>
+            <div class="link-body">
+              <div class="link-title">GitHub</div>
+              <div class="link-desc">程式碼平台</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="學習 stack overflow 技術問答" href="https://stackoverflow.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-study"><i class="fa-solid fa-comments"></i></div>
+            <div class="link-body">
+              <div class="link-title">Stack Overflow</div>
+              <div class="link-desc">技術問答</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="學習 medium 文章閱讀" href="https://medium.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-study"><i class="fa-solid fa-globe"></i></div>
+            <div class="link-body">
+              <div class="link-title">Medium</div>
+              <div class="link-desc">文章閱讀</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+        </div>
+      </section>
+
+      <section class="category" data-category="娛樂">
+        <div class="category-header">
+          <div class="category-icon cat-entertainment"><i class="fa-solid fa-film"></i></div>
+          <div>
+            <h2 class="category-title">娛樂</h2>
+            <div class="category-subtitle">4 個常用網站</div>
+          </div>
+        </div>
+        <div class="links">
+          <a class="link-card" data-search="娛樂 youtube 影音內容" href="https://www.youtube.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-entertainment"><i class="fa-brands fa-youtube"></i></div>
+            <div class="link-body">
+              <div class="link-title">YouTube</div>
+              <div class="link-desc">影音內容</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="娛樂 spotify 音樂播放" href="https://open.spotify.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-entertainment"><i class="fa-brands fa-spotify"></i></div>
+            <div class="link-body">
+              <div class="link-title">Spotify</div>
+              <div class="link-desc">音樂播放</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="娛樂 netflix 影集電影" href="https://www.netflix.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-entertainment"><i class="fa-solid fa-play"></i></div>
+            <div class="link-body">
+              <div class="link-title">Netflix</div>
+              <div class="link-desc">影集電影</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="娛樂 pinterest 靈感收藏" href="https://www.pinterest.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-entertainment"><i class="fa-brands fa-pinterest-p"></i></div>
+            <div class="link-body">
+              <div class="link-title">Pinterest</div>
+              <div class="link-desc">靈感收藏</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+        </div>
+      </section>
+
+      <section class="category" data-category="日常">
+        <div class="category-header">
+          <div class="category-icon cat-daily"><i class="fa-solid fa-sparkles"></i></div>
+          <div>
+            <h2 class="category-title">日常</h2>
+            <div class="category-subtitle">4 個常用網站</div>
+          </div>
+        </div>
+        <div class="links">
+          <a class="link-card" data-search="日常 google 快速搜尋" href="https://www.google.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-daily"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="link-body">
+              <div class="link-title">Google</div>
+              <div class="link-desc">快速搜尋</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="日常 google 地圖 導航 地點" href="https://maps.google.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-daily"><i class="fa-solid fa-map-location-dot"></i></div>
+            <div class="link-body">
+              <div class="link-title">Google 地圖</div>
+              <div class="link-desc">導航與地點</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="日常 蝦皮 購物平台" href="https://shopee.tw" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-daily"><i class="fa-solid fa-bag-shopping"></i></div>
+            <div class="link-body">
+              <div class="link-title">蝦皮</div>
+              <div class="link-desc">購物平台</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="日常 facebook 社群聯繫" href="https://www.facebook.com" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-daily"><i class="fa-brands fa-facebook-f"></i></div>
+            <div class="link-body">
+              <div class="link-title">Facebook</div>
+              <div class="link-desc">社群聯繫</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+          <a class="link-card" data-search="日常 Nonogram 遊戲" href="https://laplace0826.github.io/nonogram" target="_blank" rel="noreferrer">
+            <div class="link-icon cat-daily"><i class="fa-brands fa-facebook-f"></i></div>
+            <div class="link-body">
+              <div class="link-title">Nonogram</div>
+              <div class="link-desc">遊戲</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <div id="emptyState" class="empty">
+      找不到符合的網站，請換個關鍵字試試看。
     </div>
-  );
-}
+
+    <footer class="footer">
+      你可以直接把這份檔案當成 <code>index.html</code> 使用；如果想新增網站，只要複製一個 <code>.link-card</code> 區塊並修改名稱、說明與網址即可。
+    </footer>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const themeToggle = document.getElementById('themeToggle');
+    const categories = Array.from(document.querySelectorAll('.category'));
+    const emptyState = document.getElementById('emptyState');
+
+    const savedTheme = localStorage.getItem('homepage-theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light');
+      themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light');
+      localStorage.setItem('homepage-theme', isLight ? 'light' : 'dark');
+      themeToggle.innerHTML = isLight
+        ? '<i class="fa-solid fa-moon"></i>'
+        : '<i class="fa-solid fa-sun"></i>';
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const keyword = e.target.value.trim().toLowerCase();
+      let visibleCategories = 0;
+
+      categories.forEach((category) => {
+        const categoryName = (category.dataset.category || '').toLowerCase();
+        const cards = Array.from(category.querySelectorAll('.link-card'));
+
+        let visibleCards = 0;
+        cards.forEach((card) => {
+          const text = (card.dataset.search || '').toLowerCase();
+          const matched = !keyword || text.includes(keyword) || categoryName.includes(keyword);
+          card.style.display = matched ? 'flex' : 'none';
+          if (matched) visibleCards += 1;
+        });
+
+        category.style.display = visibleCards > 0 ? 'block' : 'none';
+        if (visibleCards > 0) visibleCategories += 1;
+      });
+
+      emptyState.style.display = visibleCategories === 0 ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>
