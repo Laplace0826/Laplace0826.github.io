@@ -2,76 +2,81 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>Nonogram 測試工具</title>
+<title>Nonogram 測試工具 Pro</title>
 
 <style>
-  body {
-    font-family: sans-serif;
-    padding: 20px;
-  }
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  text-align: center;
+}
 
-  textarea {
-    width: 200px;
-    height: 150px;
-  }
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
 
-  .container {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
+textarea {
+  width: 180px;
+  height: 140px;
+}
 
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-  }
+button {
+  padding: 8px 16px;
+  margin: 5px;
+  cursor: pointer;
+}
 
-  table {
-    border-collapse: collapse;
-  }
+table {
+  margin: auto;
+  border-collapse: collapse;
+}
 
-  td {
-    width: 25px;
-    height: 25px;
-    border: 1px solid #aaa;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    user-select: none;
-  }
+td {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #aaa;
+  cursor: pointer;
+  user-select: none;
+}
 
-  /* ✅ 每5格粗線 */
-  td.thick-right {
-    border-right: 3px solid black !important;
-  }
+td:hover {
+  background: #ddd;
+}
 
-  td.thick-bottom {
-    border-bottom: 3px solid black !important;
-  }
+td.filled {
+  background: black;
+}
 
-  td.filled {
-    background: black;
-  }
+td.cross::after {
+  content: "✕";
+  font-size: 16px;
+}
 
-  td.cross::after {
-    content: "✕";
-    font-size: 16px;
-  }
+td.hint {
+  background: #f5f5f5;
+  font-size: 12px;
+}
 
-  .hint {
-    font-size: 12px;
-    background: #f5f5f5;
-  }
+td.thick-right {
+  border-right: 3px solid black;
+}
+
+td.thick-bottom {
+  border-bottom: 3px solid black;
+}
 </style>
-
 </head>
+
 <body>
 
-<h2>Nonogram 測試工具（支援右鍵X + 每5格粗線）</h2>
+<h2>Nonogram 測試工具 PRO</h2>
 
 <div class="container">
   <div>
-    <h3>列提示 (Rows)</h3>
+    <h3>列提示</h3>
     <textarea id="rowsInput">3
 1 1
 5
@@ -80,7 +85,7 @@
   </div>
 
   <div>
-    <h3>欄提示 (Cols)</h3>
+    <h3>欄提示</h3>
     <textarea id="colsInput">1
 3
 1 1
@@ -89,47 +94,101 @@
   </div>
 </div>
 
-<button onclick="generate()">生成盤面</button>
+<div>
+  <button onclick="generate()">生成</button>
+  <button onclick="clearBoard()">清空</button>
+  <button onclick="exportBoard()">匯出</button>
+  <button onclick="importBoard()">匯入</button>
+</div>
+
+<p id="stats"></p>
 
 <div id="board"></div>
 
 <script>
+let isMouseDown = false;
+let drawMode = 1; // 1=黑, 2=X
+let grid = [];
+
+document.body.onmousedown = () => isMouseDown = true;
+document.body.onmouseup = () => isMouseDown = false;
+
 function parseInput(text) {
-  return text
-    .trim()
-    .split("\n")
-    .map(line => line.trim().split(/\s+/).map(Number));
+  return text.trim().split("\n").map(l =>
+    l.trim().split(/\s+/).map(Number)
+  );
+}
+
+function setCell(td, state) {
+  td.state = state;
+  td.classList.remove("filled", "cross");
+
+  if (state === 1) td.classList.add("filled");
+  if (state === 2) td.classList.add("cross");
+
+  updateStats();
+}
+
+function attachEvents(td) {
+  td.onmousedown = (e) => {
+    if (e.button === 2) drawMode = 2;
+    else drawMode = 1;
+    setCell(td, drawMode);
+  };
+
+  td.onmouseover = () => {
+    if (isMouseDown) {
+      setCell(td, drawMode);
+    }
+  };
+
+  td.oncontextmenu = e => e.preventDefault();
+
+  // mobile
+  td.ontouchstart = () => setCell(td, 1);
+}
+
+function updateStats() {
+  let fill = 0, cross = 0;
+
+  document.querySelectorAll("td[data-cell]").forEach(td=>{
+    if (td.state === 1) fill++;
+    if (td.state === 2) cross++;
+  });
+
+  document.getElementById("stats").innerText =
+    `黑格: ${fill} ｜ X: ${cross}`;
 }
 
 function generate() {
-  const rows = parseInput(document.getElementById("rowsInput").value);
-  const cols = parseInput(document.getElementById("colsInput").value);
+  const rows = parseInput(rowsInput.value);
+  const cols = parseInput(colsInput.value);
 
-  const height = rows.length;
-  const width = cols.length;
+  const h = rows.length;
+  const w = cols.length;
+
+  const maxCol = Math.max(...cols.map(c=>c.length));
+  const maxRow = Math.max(...rows.map(r=>r.length));
 
   const table = document.createElement("table");
+  grid = [];
 
-  const maxColHints = Math.max(...cols.map(c => c.length));
-  const maxRowHints = Math.max(...rows.map(r => r.length));
-
-  // ✅ 欄提示
-  for (let i = 0; i < maxColHints; i++) {
+  // col hints
+  for (let i = 0; i < maxCol; i++) {
     const tr = document.createElement("tr");
 
-    for (let j = 0; j < maxRowHints; j++) {
+    for (let j = 0; j < maxRow; j++) {
       tr.appendChild(document.createElement("td"));
     }
 
-    for (let c = 0; c < width; c++) {
+    for (let c = 0; c < w; c++) {
       const td = document.createElement("td");
       td.className = "hint";
 
-      const index = cols[c].length - maxColHints + i;
-      if (index >= 0) td.textContent = cols[c][index];
+      const idx = cols[c].length - maxCol + i;
+      if (idx >= 0) td.textContent = cols[c][idx];
 
-      // 粗線
-      if ((c + 1) % 5 === 0) td.classList.add("thick-right");
+      if ((c+1)%5===0) td.classList.add("thick-right");
 
       tr.appendChild(td);
     }
@@ -137,56 +196,36 @@ function generate() {
     table.appendChild(tr);
   }
 
-  // ✅ 主體 + 列提示
-  for (let r = 0; r < height; r++) {
+  // cells
+  for (let r = 0; r < h; r++) {
     const tr = document.createElement("tr");
+    grid[r] = [];
 
-    // 列提示
-    for (let i = 0; i < maxRowHints; i++) {
+    // row hints
+    for (let i = 0; i < maxRow; i++) {
       const td = document.createElement("td");
       td.className = "hint";
 
-      const index = rows[r].length - maxRowHints + i;
-      if (index >= 0) td.textContent = rows[r][index];
+      const idx = rows[r].length - maxRow + i;
+      if (idx >= 0) td.textContent = rows[r][idx];
 
-      if ((r + 1) % 5 === 0) td.classList.add("thick-bottom");
+      if ((r+1)%5===0) td.classList.add("thick-bottom");
 
       tr.appendChild(td);
     }
 
-    // 格子
-    for (let c = 0; c < width; c++) {
+    // grid
+    for (let c = 0; c < w; c++) {
       const td = document.createElement("td");
       td.state = 0;
+      td.dataset.cell = 1;
 
-      // 左鍵
-      td.onclick = () => {
-        td.state = (td.state + 1) % 3;
+      attachEvents(td);
 
-        td.classList.remove("filled", "cross");
+      if ((c+1)%5===0) td.classList.add("thick-right");
+      if ((r+1)%5===0) td.classList.add("thick-bottom");
 
-        if (td.state === 1) td.classList.add("filled");
-        if (td.state === 2) td.classList.add("cross");
-      };
-
-      // ✅ 右鍵
-      td.oncontextmenu = (e) => {
-        e.preventDefault();
-
-        if (td.state === 2) {
-          td.state = 0;
-          td.classList.remove("cross");
-        } else {
-          td.state = 2;
-          td.classList.remove("filled");
-          td.classList.add("cross");
-        }
-      };
-
-      // ✅ 粗線判定
-      if ((c + 1) % 5 === 0) td.classList.add("thick-right");
-      if ((r + 1) % 5 === 0) td.classList.add("thick-bottom");
-
+      grid[r][c] = td;
       tr.appendChild(td);
     }
 
@@ -196,6 +235,30 @@ function generate() {
   const board = document.getElementById("board");
   board.innerHTML = "";
   board.appendChild(table);
+
+  updateStats();
+}
+
+function clearBoard() {
+  grid.flat().forEach(td => setCell(td, 0));
+}
+
+function exportBoard() {
+  const data = grid.map(row => row.map(td => td.state));
+  prompt("複製這段:", JSON.stringify(data));
+}
+
+function importBoard() {
+  const data = prompt("貼上盤面JSON");
+  if (!data) return;
+
+  const arr = JSON.parse(data);
+
+  for (let r = 0; r < arr.length; r++) {
+    for (let c = 0; c < arr[r].length; c++) {
+      setCell(grid[r][c], arr[r][c]);
+    }
+  }
 }
 </script>
 
